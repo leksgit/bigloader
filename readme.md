@@ -1,6 +1,4 @@
-# Shorter Laravel Application
-
-This repository contains a Laravel application for shortening URLs.
+# Upload big csv with background parsing
 
 ## Getting Started
 
@@ -11,13 +9,13 @@ Follow these steps to set up and run the application on your local machine.
 Clone this Git repository to your desired directory:
 
 ```bash
-git clone https://github.com/leksgit/shorter.git
+git clone https://github.com/leksgit/bigloader.git
 ```
 
 Navigate to the project directory:
 
 ```bash
-cd shorter
+cd bigloader
 ```
 
 ### Edit .env for docker-compose
@@ -51,7 +49,7 @@ cp .env.example .env
 Edit the .env file and configure the necessary environment variables, such as database connection details.
 
 ```bash
-APP_URL=http://short.loc
+APP_URL=http://bigloader.loc
 
 DB_CONNECTION=mysql
 DB_HOST=mysql
@@ -83,21 +81,15 @@ While still in the container's console, run the following command to apply the d
 php artisan migrate
 ```
 
-### Run Test
-Execute the tests to ensure that the application is working as expected:
-
-```bash
-php artisan test
-```
 
 ### Update Hosts File
 Add the following line to your hosts file (/etc/hosts on Linux or C:\Windows\System32\drivers\etc\hosts on Windows) to map the hostname short.loc to your local machine:
 
 ```bash
-127.0.0.1 short.loc
+127.0.0.1 bigloader.loc
 ```
 
 ### Access the Application
-Open your web browser and navigate to the following link to access the Shorter application:
+Open your web browser and navigate to the following link to access the Bigloader application:
 
-http://short.loc/addShort
+http://bigloader.loc
