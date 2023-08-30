@@ -25,7 +25,8 @@ export default {
     return {
       selectedFile: null,
       message: null,
-      intervalSeconds: null
+      intervalSeconds: null,
+      uploadId: null
     };
   },
   computed: {
@@ -48,11 +49,16 @@ export default {
 
       try {
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const response = await axios.post('/upload', formData);
+        const response = await axios.post('/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
 
         this.startCheckingStatus();
 
         this.message = response.data.message || 'Failed to upload file.';
+        this.uploadId = response.data.file_id;
       } catch (error) {
         this.message = 'An error occurred during the upload.';
       }
@@ -60,12 +66,15 @@ export default {
     async checkStatus() {
       if (this.intervalSeconds) {
         try {
-          const response = await axios.get("/status");
+          const response = await axios.get('/status?id=' + this.uploadId);
           if (response.data.is_done === true) {
             this.stopCheckingStatus();
+            this.uploadId = null;
           }
           this.message = response.data.message;
         } catch (error) {
+          this.stopCheckingStatus();
+          this.uploadId = null;
           console.error("Error checking status:", error);
         }
       }
