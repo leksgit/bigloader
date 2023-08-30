@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: bigload-webserver
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - app-network
+    depends_on:
+      - php-fpm
+
+  php-fpm:
+    build:
+      context: ./php
+    container_name: bigload-php-fpm
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - app-network
+    expose:
+      - '9000'
+    environment:
+      DB_HOST: mysql
+      REDIS_HOST: redis
+
+  node:
+    image: node:14
+    container_name: bigload-node
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - app-network
+    command: ["npm", "run", "watch"]
+
+  mysql:
+    image: mysql:8.0
+    container_name: bigload-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    expose:
+      - "3306"
+
+  redis:
+    image: redis:latest
+    container_name: bigload-redis
+    networks:
+      - app-network
+    expose:
+      - "6379"
+    volumes:
+      - redis-data:/data
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+  redis-data:
+    driver: local
