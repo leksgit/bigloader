@@ -21,10 +21,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Install Node.js and npm
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
-    && apt-get install -y nodejs
+    && apt-get install -y nodejs \
+    && curl -L https://www.npmjs.com/install.sh | sh
 
 # Avoid warnings by setting the frontend to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Load ini config for change values
+COPY ./php.ini /usr/local/etc/php/conf.d/custom-php.ini
 
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000

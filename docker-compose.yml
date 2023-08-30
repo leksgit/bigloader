@@ -28,16 +28,6 @@ services:
       DB_HOST: mysql
       REDIS_HOST: redis
 
-  node:
-    image: node:14
-    container_name: bigload-node
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    networks:
-      - app-network
-    command: ["npm", "run", "watch"]
-
   mysql:
     image: mysql:8.0
     container_name: bigload-mysql
